@@ -75,7 +75,7 @@ stages:
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-pipeline-data
-      commit: 398b41d8280162d0ddd7ecebcc690cdf3225c4ca
+      commit: 4dd51f072b4adbecdfa55edcfe54b1bc4337dea6
     parameters:
     - values:
       - --dataset_name

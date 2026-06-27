@@ -2,3 +2,5 @@
 out/*
 *snakemake*
 *.bak*
+__pycache__/
+*.py[cod]

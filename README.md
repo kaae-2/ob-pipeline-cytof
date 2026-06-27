@@ -116,6 +116,55 @@ Parameters used:
 4. Omnibenchmark uses specific commit hashes to pull modules which needs to be pinned in the YAML file. 
 5. Validate with dry-run before full execution.
 
+Guided helpers are available for the two common extension paths:
+
+```bash
+just add-dataset
+just add-model
+just validate-config
+just check-config
+```
+
+`just add-dataset` supports two modes:
+
+- Add an existing prepared dataset through the shared `data_import` module. The helper loads available dataset names from <https://github.com/kaae-2/ob-flow-datasets/tree/main/prepared> and asks you to select one.
+- Add a new dataset module from another GitHub repository. The helper adds a new `stages.data.modules` entry and prints the required output contract for downstream preprocessing and metrics.
+
+Every data module must emit these output ids:
+
+```text
+data.raw
+data.import_metadata
+```
+
+The expected files are:
+
+```text
+${output_dir}/${name}.data.tar.gz
+${output_dir}/${dataset}.${name}.metadata.json.gz
+```
+
+The metadata must include stable sample identifiers, feature/channel names, label metadata, optional batch metadata, and enough run metadata for downstream metrics and collector de-duplication.
+
+`just add-model` asks for a GitHub repository first, resolves a pinned commit, inspects setup files, and can generate a starter conda environment for Python, R, or Bash models under `envs/`.
+
+Every analysis module must accept:
+
+```text
+--name
+--output_dir
+--data.train_matrix
+--data.train_labels
+--data.test_matrix
+--data.metadata
+```
+
+Every analysis module must write:
+
+```text
+${output_dir}/${name}_predicted_labels.tar.gz
+```
+
 ### Code example: add a new analysis tool
 
 Add a software environment under `software_environments` and a module under

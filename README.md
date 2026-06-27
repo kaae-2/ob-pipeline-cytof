@@ -25,7 +25,48 @@ Data flow:
 4. `metrics` -> `{name}.flow_metrics.json.gz`
 5. `metric_collectors` -> HTML report + TSV summaries + plot archive
 
-## Local environment setup (small quickstart)
+## Setup Guide
+
+Use the bootstrap helper for a first local setup:
+
+```bash
+just bootstrap
+```
+
+The bootstrap script checks for `conda`, asks before downloading Miniforge if conda is missing, creates an `omnibenchmark` conda environment if needed, installs Omnibenchmark and helper dependencies, validates `Clustering_conda.yml`, and runs a local dry-run.
+
+If you want to install without dry-running yet:
+
+```bash
+just bootstrap-no-dry-run
+```
+
+For non-interactive setup on a machine where installing Miniforge and creating the env is acceptable:
+
+```bash
+python scripts/bootstrap_omnibenchmark.py --yes
+```
+
+The script uses:
+
+```text
+Conda prefix: ~/miniforge3
+Conda env: omnibenchmark
+TMPDIR: ~/tmp
+CONDA_PKGS_DIRS: ~/conda-pkgs
+```
+
+Override these with:
+
+```bash
+python scripts/bootstrap_omnibenchmark.py \
+  --conda-prefix ~/miniforge3 \
+  --env-name omnibenchmark \
+  --tmpdir ~/tmp \
+  --conda-pkgs-dir ~/conda-pkgs
+```
+
+### Manual Setup
 
 Example conda setup for running Omnibenchmark CLI locally:
 
@@ -48,6 +89,18 @@ Verify CLI:
 ob --help
 ```
 
+Validate the benchmark config before running:
+
+```bash
+just validate-config
+```
+
+Dry-run the DAG before executing real jobs:
+
+```bash
+just dry-run
+```
+
 Useful Omnibenchmark docs:
 
 - Docs home: <https://docs.omnibenchmark.org/latest/>
@@ -60,6 +113,14 @@ Useful Omnibenchmark docs:
 ```bash
 ob run benchmark -b Clustering_conda.yml --local-storage --dry-run
 ob run benchmark -b Clustering_conda.yml --local-storage --cores 6
+```
+
+The `just` shortcuts are:
+
+```bash
+just dry-run
+just run
+just check-config
 ```
 
 ## Resource-controlled run command
@@ -130,6 +191,13 @@ just check-config
 - Add an existing prepared dataset through the shared `data_import` module. The helper loads available dataset names from <https://github.com/kaae-2/ob-flow-datasets/tree/main/prepared> and asks you to select one.
 - Add a new dataset module from another GitHub repository. The helper adds a new `stages.data.modules` entry and prints the required output contract for downstream preprocessing and metrics.
 
+For external dataset modules, the helper checks the selected GitHub repository for a `config.cfg` file with an entry point. If it cannot find one, it warns and prints the expected module contract. A recommended minimal `config.cfg` is:
+
+```ini
+[module]
+entry_point = python run_dataset.py
+```
+
 Every data module must emit these output ids:
 
 ```text
@@ -148,6 +216,13 @@ The metadata must include stable sample identifiers, feature/channel names, labe
 
 `just add-model` asks for a GitHub repository first, resolves a pinned commit, inspects setup files, and can generate a starter conda environment for Python, R, or Bash models under `envs/`.
 
+It also checks the model repository for `config.cfg` with an entry point. A recommended minimal model `config.cfg` is:
+
+```ini
+[module]
+entry_point = python run_model.py
+```
+
 Every analysis module must accept:
 
 ```text
@@ -164,6 +239,15 @@ Every analysis module must write:
 ```text
 ${output_dir}/${name}_predicted_labels.tar.gz
 ```
+
+### Helper Limitations
+
+- The helpers edit `Clustering_conda.yml`; review `git diff` before committing.
+- GitHub repository inspection requires network access and may be rate-limited without `GITHUB_TOKEN` or `GH_TOKEN`.
+- Environment generation is best-effort. Python `requirements.txt`, R metadata, and Bash scripts are detected, but complex system dependencies still need manual edits in `envs/*.yml`.
+- `config.cfg` entry point checks are warnings, not hard failures, because older modules may not have adopted the convention yet.
+- `just validate-config` validates benchmark YAML structure and local env files; it does not execute model code.
+- `just dry-run` checks DAG readiness; it does not prove a full benchmark run has enough memory, disk, or wall time.
 
 ### Code example: add a new analysis tool
 

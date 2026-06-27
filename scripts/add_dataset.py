@@ -18,6 +18,7 @@ from benchmark_config import (
     prompt_bool,
     save_config,
 )
+from detect_repo_environment import print_config_cfg_warning
 from github import discover_prepared_datasets, parse_github_repo, resolve_ref
 
 
@@ -102,6 +103,7 @@ def add_external_dataset_module(config_path: Path, args: argparse.Namespace) -> 
     repo = parse_github_repo(repo_url)
     ref = args.ref or prompt('Branch/ref to pin', 'main')
     commit = args.commit or resolve_ref(repo, ref)
+    print_config_cfg_warning(repo, ref)
     env_id = normalize_id(args.software_environment or prompt('Software environment id', 'py'))
     output_name = args.name or prompt('Output basename', 'data_raw')
     dataset_name = args.dataset_name or prompt('Dataset name/id')

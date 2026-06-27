@@ -17,7 +17,7 @@ from benchmark_config import (
     prompt_bool,
     save_config,
 )
-from detect_repo_environment import detect_project, generate_env_yaml, write_env_file
+from detect_repo_environment import detect_project, generate_env_yaml, print_config_cfg_warning, write_env_file
 from github import parse_github_repo, resolve_ref
 
 
@@ -93,6 +93,7 @@ def main() -> None:
         print('Detected setup files:')
         for signal in signals:
             print(f'- {signal}')
+    print_config_cfg_warning(repo, ref)
 
     model_id = normalize_id(args.id or prompt('Model id', repo.name))
     existing_ids = {module.get('id') for module in analysis_stage.get('modules', [])}

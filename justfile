@@ -16,6 +16,12 @@ validate-config:
 check-config:
     just validate-config && just dry-run
 
+bootstrap:
+    python scripts/bootstrap_omnibenchmark.py
+
+bootstrap-no-dry-run:
+    python scripts/bootstrap_omnibenchmark.py --skip-dry-run
+
 pull:
     git pull
 

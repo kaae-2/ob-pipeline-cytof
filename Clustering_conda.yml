@@ -189,6 +189,17 @@ stages:
       - data_import.data_raw
     - values:
       - --dataset_name
+      - '15723074'
+      - --seed
+      - '42'
+      - --transformation-cofactor
+      - '150'
+      - --potential-batches
+      - '1'
+      - --name
+      - data_import.data_raw
+    - values:
+      - --dataset_name
       - FR-FCM-Z2KP-healthy
       - --seed
       - '420'

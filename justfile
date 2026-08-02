@@ -11,7 +11,7 @@ add-model:
     python scripts/add_model.py --config Clustering_conda.yml
 
 validate-config:
-    python scripts/validate_benchmark_config.py --config Clustering_conda.yml
+    python scripts/validate_benchmark_config.py --all
 
 check-config:
     just validate-config && just dry-run

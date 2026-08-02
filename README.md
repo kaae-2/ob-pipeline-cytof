@@ -110,6 +110,31 @@ Useful Omnibenchmark docs:
 
 ## How to run
 
+The final reviewer one-shot configuration intentionally omits GateMeClass. Run
+it without `--continue-on-error`, which would permit placeholder outputs after
+module failures:
+
+```bash
+TMPDIR="$HOME/tmp" CONDA_PKGS_DIRS="$HOME/conda-pkgs" \
+CYGATE_JAVA_XMS=512m CYGATE_JAVA_XMX=6g \
+KNN_N_JOBS="$(( $(nproc) - 2 ))" \
+ob run benchmark -b Clustering_conda-reviewer-final.yml \
+  --local-storage --cores "$(nproc)" \
+  --default-resources mem_mb=12000 \
+  --resources mem_mb=52000
+```
+
+`Clustering_conda-reviewer-response.yml` is the investigative source retaining
+the pinned GateMeClass module. Its frozen partial evidence and reporting policy
+are in [`coverage/gatemeclass/`](coverage/gatemeclass/); it is not the final
+end-to-end invocation.
+
+Validate every benchmark configuration and the GateMeClass coverage ledger:
+
+```bash
+python scripts/validate_benchmark_config.py --all
+```
+
 ```bash
 ob run benchmark -b Clustering_conda.yml --local-storage --dry-run
 ob run benchmark -b Clustering_conda.yml --local-storage --cores 6

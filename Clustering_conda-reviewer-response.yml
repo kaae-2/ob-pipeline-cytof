@@ -380,7 +380,7 @@ stages:
     software_environment: dgcytof
     repository:
       url: https://github.com/kaae-2/ob-pipeline-dgcytof
-      commit: 1b3f916c5bfece8da6dfc1fe6089b58f20c822d9
+      commit: 94edd10af5037ab20ceb2a2024beefa09d3313b9
     parameters:
     - values:
       - --seed

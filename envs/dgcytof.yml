@@ -1,4 +1,7 @@
 name: dgcytof
+# Upstream 1.0.0 pins Python-3.8-era scientific packages. These newer pins are
+# the compatible versions validated for this benchmark; pkg_resources remains
+# required by the unmodified vendored package.
 channels:
   - conda-forge
   - nodefaults
@@ -20,6 +23,7 @@ dependencies:
   - conda-forge::pydantic
   - conda-forge::pyyaml
   - conda-forge::pip
+  - conda-forge::setuptools<81
   - pip:
       - "torch==2.0.1"
       - "torchvision==0.15.2"

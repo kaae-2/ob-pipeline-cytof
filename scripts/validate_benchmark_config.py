@@ -20,6 +20,16 @@ FINAL_MODELS = {'cygate', 'cyanno', 'dgcytof', 'knn', 'lda', 'random'}
 GATEMECLASS_COMMIT = 'da3fcb906345c5bd5dff879c34c548d25a3df9f8'
 DGCYTOF_COMMIT = '94edd10af5037ab20ceb2a2024beefa09d3313b9'
 METRICS_COMMIT = '795246cf09ed95d4c3df916273f7cfc60b7f45b1'
+PREPROCESSING_COMMIT = 'fc4c40812bda81b818af449c0ba8bbfa2a911e20'
+STRATIFY_COMMIT = '6bc6418d97572d217f269f842f9dfa1e5a452658'
+PREPROCESSING_AUDIT_OUTPUT = {
+    'id': 'data.pre_split_audit',
+    'path': '{input}/{stage}/{module}/{params}/{dataset}.data_preprocessing.split_audit.json.gz',
+}
+STRATIFY_AUDIT_OUTPUT = {
+    'id': 'data.split_audit',
+    'path': '{input}/{stage}/{module}/{params}/{dataset}.split_audit.json.gz',
+}
 FINAL_METRICS = ('accuracy', 'precision', 'recall', 'balanced_accuracy', 'f1')
 EXPECTED_COVERAGE_COUNTS = Counter(
     {'passed': 43, 'timed_out': 3, 'interrupted': 2, 'pending': 72}
@@ -81,6 +91,40 @@ def validate_final_metrics(metrics_stage: dict[str, Any], errors: list[str]) -> 
             'final reviewer metrics must request exactly '
             f'{list(FINAL_METRICS)} via --metric; empty/default all and additional '
             'metrics, including mutual information, are forbidden',
+        )
+
+
+def validate_final_split_audit(
+    stages: dict[str, dict[str, Any]], errors: list[str]
+) -> None:
+    preprocessing_stage = stages.get('preprocessing', {})
+    stratify_stage = stages.get('stratify', {})
+    preprocessing = modules_by_id(preprocessing_stage).get('data_preprocessing', {})
+    stratify = modules_by_id(stratify_stage).get('data_stratify', {})
+
+    if preprocessing.get('repository', {}).get('commit') != PREPROCESSING_COMMIT:
+        error(errors, f'final preprocessing must be pinned to {PREPROCESSING_COMMIT}')
+    if stratify.get('repository', {}).get('commit') != STRATIFY_COMMIT:
+        error(errors, f'final stratify must be pinned to {STRATIFY_COMMIT}')
+    if PREPROCESSING_AUDIT_OUTPUT not in preprocessing_stage.get('outputs', []):
+        error(errors, 'final preprocessing must declare data.pre_split_audit')
+    if STRATIFY_AUDIT_OUTPUT not in stratify_stage.get('outputs', []):
+        error(errors, 'final stratify must declare data.split_audit')
+
+    analysis_inputs = {
+        entry
+        for input_group in stages.get('analysis', {}).get('inputs', [])
+        for entry in input_group.get('entries', [])
+    }
+    if analysis_inputs != {
+        'data.train_matrix',
+        'data.train_labels',
+        'data.test_matrix',
+        'data.metadata',
+    }:
+        error(
+            errors,
+            'final model inputs must remain unchanged; split_audit flows in data.metadata',
         )
 
 
@@ -189,6 +233,7 @@ def validate_reviewer_policy(
     analysis_modules = modules_by_id(stages['analysis'])
     if config_path.name == FINAL_CONFIG:
         validate_final_metrics(stages.get('metrics', {}), errors)
+        validate_final_split_audit(stages, errors)
         if set(analysis_modules) != FINAL_MODELS:
             error(
                 errors,
@@ -212,11 +257,22 @@ def validate_reviewer_policy(
             ]
             expected_metrics = modules_by_id(find_stage(expected, 'metrics'))
             expected_metrics['flow_metrics']['parameters'] = final_metrics_parameters()
+            expected_preprocessing = find_stage(expected, 'preprocessing')
+            modules_by_id(expected_preprocessing)['data_preprocessing']['repository'][
+                'commit'
+            ] = PREPROCESSING_COMMIT
+            expected_preprocessing['outputs'].append(PREPROCESSING_AUDIT_OUTPUT)
+            expected_stratify = find_stage(expected, 'stratify')
+            modules_by_id(expected_stratify)['data_stratify']['repository'][
+                'commit'
+            ] = STRATIFY_COMMIT
+            expected_stratify['outputs'].append(STRATIFY_AUDIT_OUTPUT)
             if data != expected:
                 error(
                     errors,
                     'final reviewer config must differ from the investigative config '
-                    'only by its description, GateMeClass removal, and approved metrics request',
+                    'only by its description, GateMeClass removal, approved metrics request, '
+                    'and split-audit pins/outputs',
                 )
         validate_coverage_manifest(config_path.parent, errors)
     else:

@@ -269,7 +269,7 @@ stages:
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-pipeline-preprocessing
-      commit: 7ef034f394ce78ec2cc204ece4fcf1c9b35cb098
+      commit: fc4c40812bda81b818af449c0ba8bbfa2a911e20
     parameters:
     - values:
       - --num
@@ -321,6 +321,8 @@ stages:
     path: '{input}/{stage}/{module}/{params}/data_preprocessing.test.labels.tar.gz'
   - id: data.pre_metadata
     path: '{input}/{stage}/{module}/{params}/{dataset}.data_preprocessing.metadata.json.gz'
+  - id: data.pre_split_audit
+    path: '{input}/{stage}/{module}/{params}/{dataset}.data_preprocessing.split_audit.json.gz'
 - id: stratify
   modules:
   - id: data_stratify
@@ -328,7 +330,7 @@ stages:
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-stratify.git
-      commit: 85ad6485f3fb4395a19502f479ad7476923d790a
+      commit: 6bc6418d97572d217f269f842f9dfa1e5a452658
     parameters:
     - values:
       - --drop-ungated-training
@@ -363,6 +365,8 @@ stages:
     path: '{input}/{stage}/{module}/{params}/{dataset}.test.labels.tar.gz'
   - id: data.metadata
     path: '{input}/{stage}/{module}/{params}/{dataset}.metadata.json.gz'
+  - id: data.split_audit
+    path: '{input}/{stage}/{module}/{params}/{dataset}.split_audit.json.gz'
 - id: analysis
   inputs:
   - entries:

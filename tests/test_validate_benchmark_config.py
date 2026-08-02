@@ -14,6 +14,67 @@ from benchmark_config import find_module, find_stage, load_config  # noqa: E402
 import validate_benchmark_config as validator  # noqa: E402
 
 
+class FinalPreparedDataPolicyTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.config_path = ROOT / 'Clustering_conda-reviewer-final.yml'
+        self.config = load_config(self.config_path)
+
+    def validate_modified(self, config: dict) -> list[str]:
+        real_load_config = validator.load_config
+
+        def load_config_override(path: str | Path) -> dict:
+            if Path(path).name == validator.FINAL_CONFIG:
+                return config
+            return real_load_config(path)
+
+        with patch.object(
+            validator,
+            'load_config',
+            side_effect=load_config_override,
+        ):
+            return validator.validate(self.config_path)
+
+    def test_all_final_data_parameters_pin_the_published_dataset_commit(self) -> None:
+        data_import = find_module(find_stage(self.config, 'data'), 'data_import')
+
+        self.assertEqual(
+            data_import['repository']['commit'], validator.DATA_IMPORT_COMMIT
+        )
+        self.assertEqual(len(data_import['parameters']), 16)
+        for parameter in data_import['parameters']:
+            values = parameter['values']
+            revision_index = values.index('--dataset-revision')
+            self.assertEqual(values.count('--dataset-revision'), 1)
+            self.assertEqual(values[revision_index + 1], validator.DATASET_REVISION)
+        self.assertEqual(validator.validate(self.config_path), [])
+
+    def test_missing_mutable_and_duplicate_dataset_revisions_are_rejected(self) -> None:
+        replacements = (
+            [],
+            ['--dataset-revision', 'main'],
+            [
+                '--dataset-revision',
+                validator.DATASET_REVISION,
+                '--dataset-revision',
+                validator.DATASET_REVISION,
+            ],
+        )
+        for replacement in replacements:
+            with self.subTest(replacement=replacement):
+                config = deepcopy(self.config)
+                values = find_module(
+                    find_stage(config, 'data'), 'data_import'
+                )['parameters'][0]['values']
+                revision_index = values.index('--dataset-revision')
+                values[revision_index:revision_index + 2] = replacement
+
+                errors = self.validate_modified(config)
+
+                self.assertTrue(
+                    any('must contain exactly one --dataset-revision' in item for item in errors)
+                )
+
+
 class FinalMetricsPolicyTests(unittest.TestCase):
     def setUp(self) -> None:
         self.config_path = ROOT / 'Clustering_conda-reviewer-final.yml'

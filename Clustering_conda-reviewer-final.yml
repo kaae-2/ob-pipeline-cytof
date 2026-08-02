@@ -71,11 +71,13 @@ stages:
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-pipeline-data
-      commit: aa29254bd4c5541521a1e1f95359fcaf31cd56aa
+      commit: f86110305e16146e8a2bc59d539b6ee764a2a52b
     parameters:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -87,6 +89,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-covid
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -98,6 +102,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z238
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -109,6 +115,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z3YR
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -120,6 +128,8 @@ stages:
     - values:
       - --dataset_name
       - Samusik
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -131,6 +141,8 @@ stages:
     - values:
       - --dataset_name
       - BodenmillerXL
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -142,6 +154,8 @@ stages:
     - values:
       - --dataset_name
       - Levine
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -153,6 +167,8 @@ stages:
     - values:
       - --dataset_name
       - FlowCyt
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -164,6 +180,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-ZY34
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -175,6 +193,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-ZYVT
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --transformation-cofactor
@@ -186,6 +206,8 @@ stages:
     - values:
       - --dataset_name
       - '15723074'
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '42'
       - --potential-batches
@@ -195,6 +217,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '420'
       - --sub-sampling
@@ -208,6 +232,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '420'
       - --sub-sampling
@@ -221,6 +247,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '420'
       - --sub-sampling
@@ -234,6 +262,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '420'
       - --sub-sampling
@@ -247,6 +277,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9
       - --seed
       - '420'
       - --sub-sampling

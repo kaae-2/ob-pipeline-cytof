@@ -17,6 +17,8 @@ SHA_RE = re.compile(r'^[0-9a-fA-F]{7,40}$')
 FINAL_CONFIG = 'Clustering_conda-reviewer-final.yml'
 INVESTIGATIVE_CONFIG = 'Clustering_conda-reviewer-response.yml'
 FINAL_MODELS = {'cygate', 'cyanno', 'dgcytof', 'knn', 'lda', 'random'}
+DATA_IMPORT_COMMIT = 'f86110305e16146e8a2bc59d539b6ee764a2a52b'
+DATASET_REVISION = '2338a6222ff27d5f3ea07fbfa0e78c1b71716ea9'
 GATEMECLASS_COMMIT = 'da3fcb906345c5bd5dff879c34c548d25a3df9f8'
 DGCYTOF_COMMIT = '94edd10af5037ab20ceb2a2024beefa09d3313b9'
 METRICS_COMMIT = '795246cf09ed95d4c3df916273f7cfc60b7f45b1'
@@ -75,6 +77,33 @@ def modules_by_id(stage: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 def final_metrics_parameters() -> list[dict[str, list[str]]]:
     return [{'values': ['--metric', ','.join(FINAL_METRICS)]}]
+
+
+def validate_final_data_pin(data_stage: dict[str, Any], errors: list[str]) -> None:
+    data_import = modules_by_id(data_stage).get('data_import')
+    if not data_import:
+        error(errors, 'final reviewer config must contain data_import')
+        return
+    if data_import.get('repository', {}).get('commit') != DATA_IMPORT_COMMIT:
+        error(errors, f'final data importer must be pinned to {DATA_IMPORT_COMMIT}')
+    for index, parameter in enumerate(data_import.get('parameters', []), start=1):
+        values = parameter.get('values', [])
+        revision_positions = [
+            position
+            for position, value in enumerate(values)
+            if value == '--dataset-revision'
+        ]
+        revisions = [
+            values[position + 1]
+            for position in revision_positions
+            if position + 1 < len(values)
+        ]
+        if len(revision_positions) != 1 or revisions != [DATASET_REVISION]:
+            error(
+                errors,
+                f'final data parameter set {index} must contain exactly one '
+                f'--dataset-revision {DATASET_REVISION}',
+            )
 
 
 def validate_final_metrics(metrics_stage: dict[str, Any], errors: list[str]) -> None:
@@ -232,6 +261,7 @@ def validate_reviewer_policy(
 
     analysis_modules = modules_by_id(stages['analysis'])
     if config_path.name == FINAL_CONFIG:
+        validate_final_data_pin(stages.get('data', {}), errors)
         validate_final_metrics(stages.get('metrics', {}), errors)
         validate_final_split_audit(stages, errors)
         if set(analysis_modules) != FINAL_MODELS:
@@ -257,6 +287,17 @@ def validate_reviewer_policy(
             ]
             expected_metrics = modules_by_id(find_stage(expected, 'metrics'))
             expected_metrics['flow_metrics']['parameters'] = final_metrics_parameters()
+            expected_data_import = modules_by_id(find_stage(expected, 'data'))[
+                'data_import'
+            ]
+            expected_data_import['repository']['commit'] = DATA_IMPORT_COMMIT
+            for parameter in expected_data_import.get('parameters', []):
+                values = parameter.get('values', [])
+                dataset_name_index = values.index('--dataset_name')
+                values[dataset_name_index + 2:dataset_name_index + 2] = [
+                    '--dataset-revision',
+                    DATASET_REVISION,
+                ]
             expected_preprocessing = find_stage(expected, 'preprocessing')
             modules_by_id(expected_preprocessing)['data_preprocessing']['repository'][
                 'commit'
@@ -272,7 +313,7 @@ def validate_reviewer_policy(
                     errors,
                     'final reviewer config must differ from the investigative config '
                     'only by its description, GateMeClass removal, approved metrics request, '
-                    'and split-audit pins/outputs',
+                    'split-audit pins/outputs, and the immutable prepared-data pin',
                 )
         validate_coverage_manifest(config_path.parent, errors)
     else:

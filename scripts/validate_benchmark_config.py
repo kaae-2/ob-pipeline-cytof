@@ -19,6 +19,8 @@ INVESTIGATIVE_CONFIG = 'Clustering_conda-reviewer-response.yml'
 FINAL_MODELS = {'cygate', 'cyanno', 'dgcytof', 'knn', 'lda', 'random'}
 GATEMECLASS_COMMIT = 'da3fcb906345c5bd5dff879c34c548d25a3df9f8'
 DGCYTOF_COMMIT = '94edd10af5037ab20ceb2a2024beefa09d3313b9'
+METRICS_COMMIT = '795246cf09ed95d4c3df916273f7cfc60b7f45b1'
+FINAL_METRICS = ('accuracy', 'precision', 'recall', 'balanced_accuracy', 'f1')
 EXPECTED_COVERAGE_COUNTS = Counter(
     {'passed': 43, 'timed_out': 3, 'interrupted': 2, 'pending': 72}
 )
@@ -59,6 +61,27 @@ def modules_by_id(stage: dict[str, Any]) -> dict[str, dict[str, Any]]:
         for module in stage.get('modules', [])
         if isinstance(module, dict) and module.get('id')
     }
+
+
+def final_metrics_parameters() -> list[dict[str, list[str]]]:
+    return [{'values': ['--metric', ','.join(FINAL_METRICS)]}]
+
+
+def validate_final_metrics(metrics_stage: dict[str, Any], errors: list[str]) -> None:
+    flow_metrics = modules_by_id(metrics_stage).get('flow_metrics')
+    if not flow_metrics:
+        error(errors, 'final reviewer config must contain flow_metrics')
+        return
+
+    if flow_metrics.get('repository', {}).get('commit') != METRICS_COMMIT:
+        error(errors, f'final reviewer metrics must be pinned to {METRICS_COMMIT}')
+    if flow_metrics.get('parameters') != final_metrics_parameters():
+        error(
+            errors,
+            'final reviewer metrics must request exactly '
+            f'{list(FINAL_METRICS)} via --metric; empty/default all and additional '
+            'metrics, including mutual information, are forbidden',
+        )
 
 
 def validate_coverage_manifest(config_dir: Path, errors: list[str]) -> None:
@@ -165,6 +188,7 @@ def validate_reviewer_policy(
 
     analysis_modules = modules_by_id(stages['analysis'])
     if config_path.name == FINAL_CONFIG:
+        validate_final_metrics(stages.get('metrics', {}), errors)
         if set(analysis_modules) != FINAL_MODELS:
             error(
                 errors,
@@ -186,11 +210,13 @@ def validate_reviewer_policy(
                 for module in expected_analysis.get('modules', [])
                 if module.get('id') != 'gatemeclass'
             ]
+            expected_metrics = modules_by_id(find_stage(expected, 'metrics'))
+            expected_metrics['flow_metrics']['parameters'] = final_metrics_parameters()
             if data != expected:
                 error(
                     errors,
                     'final reviewer config must differ from the investigative config '
-                    'only by its description and GateMeClass removal',
+                    'only by its description, GateMeClass removal, and approved metrics request',
                 )
         validate_coverage_manifest(config_path.parent, errors)
     else:

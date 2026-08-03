@@ -32,6 +32,7 @@ dependencies:
   - conda-forge::r-moments=0.14.1
   - conda-forge::r-biocmanager
   - bioconda::bioconductor-batchelor=1.18.0
+  - bioconda::bioconductor-biocneighbors=1.20.0
   - conda-forge::r-class
   - conda-forge::r-e1071
   - conda-forge::r-lattice

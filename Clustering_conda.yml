@@ -1,5 +1,5 @@
 id: cytof_benchmmark_exercise
-description: Benchmark of different clustering algorithms for benchmark phd course.
+description: Final reviewer benchmark; GateMeClass is reported from validated supplementary evidence only.
 version: 0.3
 benchmarker: Andrea Sonnenholzner, Frederik Kirk, Helene Wegener, Javier Herranz
 storage: http://omnibenchmark.org:9000
@@ -28,10 +28,6 @@ software_environments:
     description: CyAnno module environment
     conda: envs/cyanno_env.yml
     envmodule: cyanno
-  gatemeclass:
-    description: gatemeclass module environment
-    conda: envs/gateme_env.yml
-    envmodule: gatemeclass
   dgcytof:
     description: DG-CyTOF legacy environment
     conda: envs/dgcytof.yml
@@ -80,6 +76,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -91,6 +89,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-covid
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -102,6 +102,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z238
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -113,6 +115,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z3YR
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -124,6 +128,8 @@ stages:
     - values:
       - --dataset_name
       - Samusik
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -135,6 +141,8 @@ stages:
     - values:
       - --dataset_name
       - BodenmillerXL
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -146,6 +154,8 @@ stages:
     - values:
       - --dataset_name
       - Levine
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -157,6 +167,8 @@ stages:
     - values:
       - --dataset_name
       - FlowCyt
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -168,6 +180,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-ZY34
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -179,6 +193,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-ZYVT
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
       - --transformation-cofactor
@@ -190,10 +206,10 @@ stages:
     - values:
       - --dataset_name
       - '15723074'
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
-      - --transformation-cofactor
-      - '150'
       - --potential-batches
       - '1'
       - --name
@@ -201,6 +217,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '420'
       - --sub-sampling
@@ -214,6 +232,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '420'
       - --sub-sampling
@@ -227,6 +247,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '420'
       - --sub-sampling
@@ -240,6 +262,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '420'
       - --sub-sampling
@@ -253,6 +277,8 @@ stages:
     - values:
       - --dataset_name
       - FR-FCM-Z2KP-healthy
+      - --dataset-revision
+      - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '420'
       - --sub-sampling
@@ -327,6 +353,8 @@ stages:
     path: '{input}/{stage}/{module}/{params}/data_preprocessing.test.labels.tar.gz'
   - id: data.pre_metadata
     path: '{input}/{stage}/{module}/{params}/{dataset}.data_preprocessing.metadata.json.gz'
+  - id: data.pre_split_audit
+    path: '{input}/{stage}/{module}/{params}/{dataset}.data_preprocessing.split_audit.json.gz'
 - id: stratify
   modules:
   - id: data_stratify
@@ -369,6 +397,8 @@ stages:
     path: '{input}/{stage}/{module}/{params}/{dataset}.test.labels.tar.gz'
   - id: data.metadata
     path: '{input}/{stage}/{module}/{params}/{dataset}.metadata.json.gz'
+  - id: data.split_audit
+    path: '{input}/{stage}/{module}/{params}/{dataset}.split_audit.json.gz'
 - id: analysis
   inputs:
   - entries:
@@ -378,12 +408,15 @@ stages:
     - data.metadata
   modules:
   - id: dgcytof
-    name: DG-CyTOF
-    software_environment: py
+    name: DGCyTOF
+    software_environment: dgcytof
     repository:
       url: https://github.com/kaae-2/ob-pipeline-dgcytof
       commit: 03892d71e267f98f922ab8020af1e9c3b4e23e24
-    parameters: []
+    parameters:
+    - values:
+      - --seed
+      - '42'
   - id: cygate
     name: CyGATE
     software_environment: bash
@@ -418,31 +451,6 @@ stages:
       url: https://github.com/kaae-2/ob-pipeline-LDA
       commit: 33b3c94dda212acda1ed09601e38ee37e512e236
     parameters: []
-  - id: gatemeclass
-    name: GateMeClass
-    software_environment: gatemeclass
-    repository:
-      url: https://github.com/kaae-2/GateMeClass_model
-      commit: 94767406f30f6b9343ae597409b27f9ff23c0be7
-    parameters:
-    - values:
-      - --GMM_parameterization
-      - E
-      - --sampling
-      - '0.1'
-      - --k
-      - '20'
-      - --excluded-datasets
-      - FR-FCM-Z3YR,FlowCyt,FR-FCM-Z2KP-covid,FR-FCM-Z238
-    - values:
-      - --GMM_parameterization
-      - V
-      - --sampling
-      - '0.1'
-      - --k
-      - '20'
-      - --excluded-datasets
-      - FR-FCM-Z3YR,FlowCyt,FR-FCM-Z2KP-covid,FR-FCM-Z238
   outputs:
   - id: analysis.prediction
     path: '{input}/{stage}/{module}/{params}/{dataset}_predicted_labels.tar.gz'
@@ -454,7 +462,10 @@ stages:
     repository:
       url: https://github.com/kaae-2/ob-pipeline-metrics
       commit: 795246cf09ed95d4c3df916273f7cfc60b7f45b1
-    parameters: []
+    parameters:
+    - values:
+      - --metric
+      - accuracy,precision,recall,balanced_accuracy,f1
   inputs:
   - entries:
     - analysis.prediction

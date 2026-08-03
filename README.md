@@ -110,26 +110,21 @@ Useful Omnibenchmark docs:
 
 ## How to run
 
-The final reviewer one-shot configuration intentionally omits GateMeClass. Run
-it without `--continue-on-error`, which would permit placeholder outputs after
-module failures:
+The canonical configuration intentionally omits GateMeClass. Run it without
+`--continue-on-error`, which would permit placeholder outputs after module
+failures:
 
 ```bash
 TMPDIR="$HOME/tmp" CONDA_PKGS_DIRS="$HOME/conda-pkgs" \
 CYGATE_JAVA_XMS=512m CYGATE_JAVA_XMX=6g \
 KNN_N_JOBS="$(( $(nproc) - 2 ))" \
-ob run benchmark -b Clustering_conda-reviewer-final.yml \
+ob run benchmark -b Clustering_conda.yml \
   --local-storage --cores "$(nproc)" \
   --default-resources mem_mb=12000 \
   --resources mem_mb=52000
 ```
 
-`Clustering_conda-reviewer-response.yml` is the investigative source retaining
-the pinned GateMeClass module. Its frozen partial evidence and reporting policy
-are in [`coverage/gatemeclass/`](coverage/gatemeclass/); it is not the final
-end-to-end invocation.
-
-Validate every benchmark configuration and the GateMeClass coverage ledger:
+Validate every benchmark configuration:
 
 ```bash
 python scripts/validate_benchmark_config.py --all
@@ -155,7 +150,6 @@ For larger runs, use explicit limits in one command:
 ```bash
 TMPDIR="$HOME/tmp" CONDA_PKGS_DIRS="$HOME/conda-pkgs" \
 CYGATE_JAVA_XMS=512m CYGATE_JAVA_XMX=6g \
-GATEMECLASS_CORES=1 GATEMECLASS_BLAS_THREADS=1 \
 KNN_N_JOBS="$(( $(nproc) - 2 ))" \
 ob run benchmark -b Clustering_conda.yml --local-storage --cores "$(nproc)" \
   --default-resources mem_mb=12000 \
@@ -167,8 +161,6 @@ ob run benchmark -b Clustering_conda.yml --local-storage --cores "$(nproc)" \
   analysis_dgcytof_default:mem_mb=7000 \
   analysis_cyanno_default:mem_mb=6000 \
   analysis_lda_default:mem_mb=2500 \
-  analysis_gatemeclass_.3c530339a11d8427b017a7815187a9925e6f400b3dc60e8c49021043cb0ad155:mem_mb=5500 \
-  analysis_gatemeclass_.d51d2d4cdd7aa7a8932ed1b2ec95e100abe8ba09548fb2327f68b81dff72cd40:mem_mb=5500 \
   preprocessing_data_preprocessing_.34887b980ba1bc5c62edd21ce45ff723e243427e7d7c20d12ef05ee2521ca105:mem_mb=4500 \
   preprocessing_data_preprocessing_.3cd57f101f52cc8f1e65c10f45eaf594947077c8d9def5332ec922b6e338c80d:mem_mb=4500 \
   preprocessing_data_preprocessing_.847bfb0d4a973df0f35c11bf99fb6e1b94f2357ab40f07caaf9534b6ad686016:mem_mb=4500 \

@@ -111,9 +111,10 @@ Useful Omnibenchmark docs:
 ## How to run
 
 The canonical configuration includes GateMeClass and excludes its four
-large-dataset variants through `--excluded-datasets`. Run it without
-`--continue-on-error`, which would permit placeholder outputs after module
-failures:
+large-dataset variants through `--excluded-datasets`. Excluded jobs write
+row-aligned `NA` prediction archives that metrics identify as `not_run`. Run it
+without `--continue-on-error`, which would permit uncontrolled placeholder
+outputs after module failures:
 
 ```bash
 TMPDIR="$HOME/tmp" CONDA_PKGS_DIRS="$HOME/conda-pkgs" \

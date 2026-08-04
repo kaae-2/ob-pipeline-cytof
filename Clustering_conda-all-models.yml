@@ -254,8 +254,8 @@ stages:
         name: GateMeClass
         software_environment: gatemeclass
         repository:
-          url: https://github.com/andreasonnen/gatemeclass
-          commit: e3f63cd26b68ef97efdc2777282fdcb4691fc66e
+          url: https://github.com/kaae-2/GateMeClass_model
+          commit: 089fe353c620883b169a405396e2df4e79ac97b0
         parameters:
           - values:
               - --GMM_parameterization
@@ -265,7 +265,7 @@ stages:
               - --k
               - "20"
               - --excluded-datasets
-              - ""
+              - FR-FCM-Z3YR,FlowCyt,FR-FCM-Z2KP-covid,FR-FCM-Z238
           - values:
               - --GMM_parameterization
               - E
@@ -274,7 +274,7 @@ stages:
               - --k
               - "20"
               - --excluded-datasets
-              - ""
+              - FR-FCM-Z3YR,FlowCyt,FR-FCM-Z2KP-covid,FR-FCM-Z238
       - id: deepcytof
         name: DeepCyTOF
         software_environment: deepcytof

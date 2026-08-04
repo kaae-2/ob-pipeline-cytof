@@ -110,13 +110,15 @@ Useful Omnibenchmark docs:
 
 ## How to run
 
-The canonical configuration intentionally omits GateMeClass. Run it without
+The canonical configuration includes GateMeClass and excludes its four
+large-dataset variants through `--excluded-datasets`. Run it without
 `--continue-on-error`, which would permit placeholder outputs after module
 failures:
 
 ```bash
 TMPDIR="$HOME/tmp" CONDA_PKGS_DIRS="$HOME/conda-pkgs" \
 CYGATE_JAVA_XMS=512m CYGATE_JAVA_XMX=6g \
+GATEMECLASS_CORES=1 GATEMECLASS_BLAS_THREADS=1 \
 KNN_N_JOBS="$(( $(nproc) - 2 ))" \
 ob run benchmark -b Clustering_conda.yml \
   --local-storage --cores "$(nproc)" \
@@ -150,6 +152,7 @@ For larger runs, use explicit limits in one command:
 ```bash
 TMPDIR="$HOME/tmp" CONDA_PKGS_DIRS="$HOME/conda-pkgs" \
 CYGATE_JAVA_XMS=512m CYGATE_JAVA_XMX=6g \
+GATEMECLASS_CORES=1 GATEMECLASS_BLAS_THREADS=1 \
 KNN_N_JOBS="$(( $(nproc) - 2 ))" \
 ob run benchmark -b Clustering_conda.yml --local-storage --cores "$(nproc)" \
   --default-resources mem_mb=12000 \
@@ -161,6 +164,8 @@ ob run benchmark -b Clustering_conda.yml --local-storage --cores "$(nproc)" \
   analysis_dgcytof_default:mem_mb=7000 \
   analysis_cyanno_default:mem_mb=6000 \
   analysis_lda_default:mem_mb=2500 \
+  analysis_gatemeclass_.403b8ea3088fca937abc4d8eb5fbf6be4032d3e90324321d6c3e85108482f780:mem_mb=5500 \
+  analysis_gatemeclass_.fc5c9200756e411c384046349c9244572ee0e54d0d52a2f1a5e4e8150b10e341:mem_mb=5500 \
   preprocessing_data_preprocessing_.34887b980ba1bc5c62edd21ce45ff723e243427e7d7c20d12ef05ee2521ca105:mem_mb=4500 \
   preprocessing_data_preprocessing_.3cd57f101f52cc8f1e65c10f45eaf594947077c8d9def5332ec922b6e338c80d:mem_mb=4500 \
   preprocessing_data_preprocessing_.847bfb0d4a973df0f35c11bf99fb6e1b94f2357ab40f07caaf9534b6ad686016:mem_mb=4500 \
@@ -180,7 +185,7 @@ Parameters used:
   - `analysis_cygate_default` -> `7500` MB
   - `analysis_dgcytof_default` -> `7000` MB
   - `analysis_cyanno_default` -> `6000` MB
-  - `analysis_gatemeclass_.3c530339...`, `analysis_gatemeclass_.d51d2d4c...` -> `5500` MB
+  - `analysis_gatemeclass_.403b8ea3...`, `analysis_gatemeclass_.fc5c9200...` -> `5500` MB
   - `analysis_lda_default` -> `2500` MB
   - `analysis_random_default` -> `1000` MB
   - `metrics_flow_metrics_default` -> `2500` MB

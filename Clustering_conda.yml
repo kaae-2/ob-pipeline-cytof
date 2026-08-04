@@ -1,5 +1,6 @@
 id: cytof_benchmmark_exercise
-description: Final reviewer benchmark; GateMeClass is reported from validated supplementary evidence only.
+description: Final reviewer benchmark; GateMeClass is reported from validated supplementary
+  evidence only.
 version: 0.3
 benchmarker: Andrea Sonnenholzner, Frederik Kirk, Helene Wegener, Javier Herranz
 storage: http://omnibenchmark.org:9000
@@ -461,7 +462,7 @@ stages:
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-pipeline-metrics
-      commit: 795246cf09ed95d4c3df916273f7cfc60b7f45b1
+      commit: 6ce3ed1d5fd9ce5663d1b9c962ce215cb1452ff1
     parameters:
     - values:
       - --metric

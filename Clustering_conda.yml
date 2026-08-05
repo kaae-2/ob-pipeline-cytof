@@ -417,10 +417,7 @@ stages:
     repository:
       url: https://github.com/kaae-2/ob-pipeline-dgcytof
       commit: 7d45117095019b42da89a4897ea2f6fe3b26e17f
-    parameters:
-    - values:
-      - --seed
-      - '42'
+    parameters: []
   - id: cygate
     name: CyGATE
     software_environment: bash

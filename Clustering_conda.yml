@@ -416,7 +416,7 @@ stages:
     software_environment: dgcytof
     repository:
       url: https://github.com/kaae-2/ob-pipeline-dgcytof
-      commit: 7d45117095019b42da89a4897ea2f6fe3b26e17f
+      commit: 311ecefd9eaeb87ac276061c1cc195e892152cf6
     parameters: []
   - id: cygate
     name: CyGATE
@@ -429,21 +429,21 @@ stages:
     software_environment: cran
     repository:
       url: https://github.com/kaae-2/ob-pipeline-random
-      commit: 8c084c4674fd8043de65ea65cc0350db89498766
+      commit: 49daf2ad1bad93301cda06c4d0e7fa6efc3b73da
     parameters: []
   - id: cyanno
     name: CyAnno
     software_environment: cyanno
     repository:
       url: https://github.com/kaae-2/ob-pipeline-cyanno
-      commit: d8b0eb5b27539f76199952ecb91a123b890ef9c9
+      commit: a9a287971d3df173f991afae019b607e3da7d50a
     parameters: []
   - id: knn
     name: KNN
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-pipeline-knn
-      commit: 60af71d18994839220e8b3d5828fb839a3157358
+      commit: 2eda2e6d2ecee81109a2d1bdf793652b585310b9
     parameters: []
   - id: lda
     name: LDA
@@ -457,7 +457,7 @@ stages:
     software_environment: gatemeclass
     repository:
       url: https://github.com/kaae-2/GateMeClass_model
-      commit: b9046153f6df89a0e66e6594285dc598ccb456bd
+      commit: f65177625ea72ae5d3e62a2fe22328fcf6cdd0ad
     parameters:
     - values:
       - --GMM_parameterization

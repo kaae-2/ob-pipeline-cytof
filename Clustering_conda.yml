@@ -58,7 +58,7 @@ metric_collectors:
   software_environment: metrics_r
   repository:
     url: https://github.com/kaae-2/ob-metrics-collectors.git
-    commit: bb83637dd596549b190c43b263aec3f834bcf669
+    commit: ed2351eb492341b1e097490222e910baa767ca3b
   inputs:
   - metrics.scores
   - data.metadata
@@ -497,7 +497,7 @@ stages:
     software_environment: py
     repository:
       url: https://github.com/kaae-2/ob-pipeline-metrics
-      commit: 8b3970c0e36ad35018056507424e625e4349d9cc
+      commit: 6572933c286df533adfe772ae5c0f7f5b920eb2d
     parameters:
     - values:
       - --metric

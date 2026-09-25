@@ -211,7 +211,7 @@ stages:
       - --dataset_name
       - '15723074'
       - --dataset-revision
-      - 67990f383ac8f169c9a00148febba1ed357e18e8
+      - 4bf02d6adbe55785ca855b57274aa37b8dc843ae
       - --seed
       - '42'
       - --transformation-cofactor
@@ -224,7 +224,7 @@ stages:
       - --dataset_name
       - FR-FCM-Z7CH-C57BL6
       - --dataset-revision
-      - b9b09ffafea189a8ea305189c2795bbf2107f7e3
+      - 4bf02d6adbe55785ca855b57274aa37b8dc843ae
       - --seed
       - '42'
       - --transformation-cofactor
@@ -237,7 +237,7 @@ stages:
       - --dataset_name
       - FR-FCM-Z7CH-BALBc
       - --dataset-revision
-      - b9b09ffafea189a8ea305189c2795bbf2107f7e3
+      - 4bf02d6adbe55785ca855b57274aa37b8dc843ae
       - --seed
       - '42'
       - --transformation-cofactor

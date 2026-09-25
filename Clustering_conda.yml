@@ -214,6 +214,34 @@ stages:
       - 67990f383ac8f169c9a00148febba1ed357e18e8
       - --seed
       - '42'
+      - --transformation-cofactor
+      - '150'
+      - --potential-batches
+      - '1'
+      - --name
+      - data_import.data_raw
+    - values:
+      - --dataset_name
+      - FR-FCM-Z7CH-C57BL6
+      - --dataset-revision
+      - b9b09ffafea189a8ea305189c2795bbf2107f7e3
+      - --seed
+      - '42'
+      - --transformation-cofactor
+      - '150'
+      - --potential-batches
+      - '1'
+      - --name
+      - data_import.data_raw
+    - values:
+      - --dataset_name
+      - FR-FCM-Z7CH-BALBc
+      - --dataset-revision
+      - b9b09ffafea189a8ea305189c2795bbf2107f7e3
+      - --seed
+      - '42'
+      - --transformation-cofactor
+      - '150'
       - --potential-batches
       - '1'
       - --name
